@@ -11,5 +11,4 @@ public class Enroll {
     private Long id;
     private Long userId;
     private Long courseId;
-    private Integer mqState;
 }

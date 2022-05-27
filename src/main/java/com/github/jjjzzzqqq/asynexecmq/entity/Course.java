@@ -38,4 +38,9 @@ public class Course {
      * 课程状态（0 未开始，1 报名中，2进行中，3已结束）
      */
     private Integer state;
+
+    /**
+     * MQ发送状态（0 未发送，1 发送成功，2发送失败）
+     */
+    private Integer mqState;
 }

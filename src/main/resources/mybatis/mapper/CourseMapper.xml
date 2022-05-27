@@ -5,4 +5,9 @@
 
 <mapper namespace="com.github.jjjzzzqqq.asynexecmq.mapper.CourseMapper">
 
+    <update id="updateMqState">
+        update course set mq_state = #{mqState} where courseId = #{courseId}
+    </update>
+
+
 </mapper>
