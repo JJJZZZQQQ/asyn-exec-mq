@@ -40,24 +40,18 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         //2.发送积分MQ
         ListenableFuture<SendResult<String, Object>> future = creditProducer.sendCredit(courseId);
         future.addCallback(new ListenableFutureCallback<SendResult<String, Object>>() {
-
             @Override
             public void onSuccess(SendResult<String, Object> stringObjectSendResult) {
                 //2.1 update mqState = 1
                 courseMapper.updateMqState(courseId,MQState.SUCCESS.getCode());
             }
-
             @Override
             public void onFailure(Throwable throwable) {
                 //2.2 update mqState = 2
                 courseMapper.updateMqState(courseId,MQState.FAIL.getCode());
             }
-
         });
 
-
-
-
-        return false;
+        return true;
     }
 }
