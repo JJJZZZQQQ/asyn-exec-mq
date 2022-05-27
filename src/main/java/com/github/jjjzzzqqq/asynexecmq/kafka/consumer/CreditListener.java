@@ -1,12 +1,8 @@
 package com.github.jjjzzzqqq.asynexecmq.kafka.consumer;
 
-import cn.hutool.json.JSON;
-import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.alibaba.druid.support.json.JSONUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.github.jjjzzzqqq.asynexecmq.entity.Credit;
 import com.github.jjjzzzqqq.asynexecmq.entity.Enroll;
 import com.github.jjjzzzqqq.asynexecmq.service.ICourseService;
@@ -31,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 import static com.github.jjjzzzqqq.asynexecmq.common.KafkaConstant.TOPIC_CREDIT;
 
 /**
- * 课程消费者，此处直接串行添加，如果消费速度比较慢的话，可以使用线程池优化。
+ * 课程消费者：负责消费课程，且保证消费幂等
  */
 @Component
 public class CreditListener {
@@ -52,7 +48,7 @@ public class CreditListener {
 
 
     /**
-     * 注意：此处由于有重复消息，可能有
+     * 注意：此处由于有重复消息，可能有多个消费者同时消费一条消息，所以需要考虑这一点
      */
     @KafkaListener(topics = TOPIC_CREDIT, groupId = "rushClass")
     public void onMessage(ConsumerRecord<?, ?> record, Acknowledgment ack, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
