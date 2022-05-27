@@ -23,12 +23,16 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import static com.github.jjjzzzqqq.asynexecmq.common.KafkaConstant.TOPIC_CREDIT;
 
+/**
+ * 课程消费者，此处直接串行添加，如果消费速度比较慢的话，可以使用线程池优化。
+ */
 @Component
 public class CreditListener {
 
@@ -85,6 +89,7 @@ public class CreditListener {
             //这种情况我们只需要保证一个消费者消费一条相同的消息即可，而消息是否相同就是由courseId区分的
             redisTemplate.opsForValue().setIfAbsent(lockKey, 1, 1, TimeUnit.HOURS);
             int score = courseService.getById(courseId).getCredit();
+            List<Credit> savaList = new LinkedList<>();
             for (Enroll enroll : enrollList) {
                 Long userId = enroll.getUserId();
                 QueryWrapper<Credit> countWrapper = new QueryWrapper<>();
@@ -99,11 +104,15 @@ public class CreditListener {
                 credit.setUserId(userId);
                 credit.setSource("选修课");
                 credit.setScore(score);
-                creditService.save(credit);
+                savaList.add(credit);
+            }
+            boolean saveBatch = creditService.saveBatch(savaList);
+
+            if(saveBatch) {
+                // 4. 消息消费完成
+                ack.acknowledge();
             }
 
-            // 4. 消息消费完成
-            ack.acknowledge();
         } catch (Exception e) {
             // 学分添加环节失败，消费者会进行重试
             logger.error("消费MQ消息，失败 topic：{} message：{}", topic, message.get());
