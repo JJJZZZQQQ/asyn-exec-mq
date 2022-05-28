@@ -9,5 +9,18 @@
         update course set mq_state = #{mqState} where course_id = #{courseId}
     </update>
 
+    <select id="getCourseIdListByMqFail" resultType="long">
+        select course_id from course
+        where course_id > #{beginId}
+        AND state = 3
+        AND mq_state in(0,2)
+        limit #{size}
 
+    </select>
+
+    <select id="getMaxId" resultType="long">
+        select course_id from course
+        order by course_id desc
+        limit 1
+    </select>
 </mapper>

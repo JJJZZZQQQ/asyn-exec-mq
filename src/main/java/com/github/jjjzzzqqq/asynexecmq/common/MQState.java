@@ -1,5 +1,9 @@
 package com.github.jjjzzzqqq.asynexecmq.common;
 
+/**
+ * @author jjjzzzqqq.github.io
+ * @since  2022/5/28  19:42
+ */
 public enum MQState {
 
     WAIT("待发送", 0),

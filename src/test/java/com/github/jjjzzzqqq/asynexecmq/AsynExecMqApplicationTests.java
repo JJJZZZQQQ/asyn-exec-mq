@@ -14,6 +14,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
 
 import static com.github.jjjzzzqqq.asynexecmq.common.KafkaConstant.TOPIC_CREDIT;
 
@@ -31,6 +32,7 @@ class AsynExecMqApplicationTests {
 
     @Resource
     private CourseMapper courseMapper;
+
     @Test
     void contextLoads() {
     }
@@ -73,5 +75,19 @@ class AsynExecMqApplicationTests {
     @Test
     void updateMqState() {
         courseMapper.updateMqState(1L,1);
+    }
+
+    @Test
+    void courseScanTask() {
+        List<Long> courseIdListByMqFail = courseMapper.getCourseIdListByMqFail(0L, 1000);
+
+        for (Long aLong : courseIdListByMqFail) {
+            System.out.println(aLong);
+        }
+    }
+
+    @Test
+    void getMaxIdTest(){
+        System.out.println(courseMapper.getMaxId());
     }
 }

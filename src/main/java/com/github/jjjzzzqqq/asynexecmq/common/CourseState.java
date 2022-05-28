@@ -1,5 +1,9 @@
 package com.github.jjjzzzqqq.asynexecmq.common;
 
+/**
+ * @author jjjzzzqqq.github.io
+ * @since  2022/5/27  19:42
+ */
 public enum CourseState {
 
     WAIT("未开始", 0),

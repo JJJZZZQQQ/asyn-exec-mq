@@ -16,6 +16,10 @@ import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import javax.annotation.Resource;
 
+/**
+ * @author jjjzzzqqq.github.io
+ * @since  2022/5/28  19:42
+ */
 @Service
 public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> implements ICourseService {
 
